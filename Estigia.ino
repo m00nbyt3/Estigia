@@ -5,10 +5,10 @@ TTGOClass *ttgo;
 char buf[128];
 bool irq = false;
 
-void low_energy()
+void low_energy(int oway)
 {
   ttgo->power->readIRQ();
-  if (ttgo->power->isPEKShortPressIRQ())
+  if (ttgo->power->isPEKShortPressIRQ() || oway)
   {
     ttgo->power->clearIRQ();
     irq = false;
@@ -39,7 +39,7 @@ void setup()
   ttgo->tft->fillScreen(TFT_BLACK);
   
   //Set date and time
-  //ttgo->rtc->setDateTime(2021, 11, 5, 01, 45, 00);
+  //ttgo->rtc->setDateTime(2021, 11, 6, 18, 54, 40);
 
   //Button config
   //--------------------------------------
@@ -61,8 +61,12 @@ void loop()
 {
   RTC_Date tnow = ttgo->rtc->getDateTime();
   int16_t x, y;
+  int i = 0;
 
-  low_energy();
+  low_energy(0);
+  //Text size and color
+  ttgo->tft->setTextSize(1);
+  //ttgo->tft->setTextColor(TFT_GREEN);
   
   //Show battery left
   snprintf(buf, sizeof(buf), "Battery: %u", ttgo->power->getBattPercentage());
@@ -78,4 +82,38 @@ void loop()
 
   //Show name
   ttgo->tft->drawString("m00nbyt3", 9, 150, 4);
+
+  //Load menu
+  if (ttgo->getTouch(x, y))
+  {
+    while (ttgo->getTouch(x, y))
+    {
+      i += 1;
+      delay(100);
+      if (i == 12)
+      {
+        low_energy(1);
+        break;
+      }
+    }
+    switch (launch())
+    {
+      case 0:
+        break;
+      case 1:
+        ttgo->tft->fillScreen(TFT_BLUE);
+        ttgo->tft->drawString("Im here...", 9, 150, 4);
+        while (!(ttgo->getTouch(x, y))){}
+        break;
+      case 2:
+        ttgo->tft->fillScreen(TFT_RED);
+        ttgo->tft->drawString("Kill haha", 9, 150, 4);
+        while (!(ttgo->getTouch(x, y))){}
+        break;
+      case 3:
+        ttgo->tft->fillScreen(TFT_YELLOW);
+        while (!(ttgo->getTouch(x, y))){}
+        break;
+    }
+  }
 }
