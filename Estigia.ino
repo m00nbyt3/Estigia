@@ -106,8 +106,7 @@ void loop()
         while (!(ttgo->getTouch(x, y))){}
         break;
       case 2:
-        ttgo->tft->fillScreen(TFT_RED);
-        ttgo->tft->drawString("Kill haha", 9, 150, 4);
+        irattack();
         while (!(ttgo->getTouch(x, y))){}
         break;
       case 3:
