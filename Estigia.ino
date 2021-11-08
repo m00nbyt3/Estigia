@@ -31,6 +31,13 @@ void low_energy(int oway)
   }
 }
 
+void relaunch()
+{
+  ttgo->stopLvglTick();
+  delay(200);
+  ttgo->startLvglTick();
+}
+
 void setup()
 {
   ttgo = TTGOClass::getWatch();
@@ -66,7 +73,6 @@ void loop()
   low_energy(0);
   //Text size and color
   ttgo->tft->setTextSize(1);
-  //ttgo->tft->setTextColor(TFT_GREEN);
   
   //Show battery left
   snprintf(buf, sizeof(buf), "Battery: %u", ttgo->power->getBattPercentage());
@@ -101,9 +107,9 @@ void loop()
       case 0:
         break;
       case 1:
-        ttgo->tft->fillScreen(TFT_BLUE);
-        ttgo->tft->drawString("Im here...", 9, 150, 4);
-        while (!(ttgo->getTouch(x, y))){}
+        timeset();
+        ttgo->tft->setTextColor(TFT_WHITE);
+        relaunch();
         break;
       case 2:
         irattack();

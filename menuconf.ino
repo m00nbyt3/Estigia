@@ -1,7 +1,7 @@
 #include "config.h"
 
 const int appnum = 4;
-String appname[appnum] = {"Clock", "U there?", "KillAll", "Honey"};
+String appname[appnum] = {"Clock", "Set Time", "KillAll", "Honey"};
 
 int launch()
 {

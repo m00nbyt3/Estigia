@@ -90,15 +90,8 @@ void sendAllCodes()
   ttgo->tft->drawString("Killing everything :))", 0, 0);
   bool endingEarly = false; //will be set to true if the user presses the button during code-sending
 
-  // determine region from REGIONSWITCH: 1 = NA, 0 = EU (defined in main.h)
-  if (digitalRead(REGIONSWITCH)) {
-    region = NA;
-    num_codes = num_NAcodes;
-  }
-  else {
-    region = EU;
-    num_codes = num_EUcodes;
-  }
+  region = EU;
+  num_codes = num_EUcodes;
 
   // for every POWER code in our collection
   for (i=0 ; i<num_codes; i++)
@@ -109,12 +102,7 @@ void sendAllCodes()
     putnum_ud(i));
 
     // point to next POWER code, from the right database
-    if (region == NA) {
-      powerCode = NApowerCodes[i];
-    }
-    else {
-      powerCode = EUpowerCodes[i];
-    }
+    powerCode = EUpowerCodes[i];
 
     // Read the carrier frequency from the first byte of code structure
     const uint8_t freq = powerCode->timer_val;
@@ -179,20 +167,6 @@ void sendAllCodes()
     // delay 205 milliseconds before transmitting next POWER code
     delay_ten_us(20500);
 
-    // if user is pushing (holding down) TRIGGER button, stop transmission early
-    if (digitalRead(TRIGGER) == BUTTON_PRESSED)
-    {
-      while (digitalRead(TRIGGER) == BUTTON_PRESSED){
-        yield();
-      }
-      endingEarly = true;
-      delay_ten_us(50000); //500ms delay
-      //pause for ~1.3 sec to give the user time to release the button so that the code sequence won't immediately start again.
-      delay_ten_us(MAX_WAIT_TIME); // wait 655.350ms
-      delay_ten_us(MAX_WAIT_TIME); // wait 655.350ms
-      break; //exit the POWER code "for" loop
-    }
-
   } //end of POWER code for loop
 
   for (int i = 0; i < 5; i++) {
@@ -202,8 +176,9 @@ void sendAllCodes()
     delay(75);
   }
   ttgo->tft->fillScreen(TFT_BLACK);
-  ttgo->tft->drawString(".", 0, 0);
-
+  ttgo->tft->drawString("END", 0, 0);
+  delay(1000);
+  exit(0);
 }
 
 void delay_ten_us(uint16_t us) {
