@@ -5,7 +5,7 @@ It is in development state, but updates are coming fast.
 
 # Apps
 - KillAll: TV Kill (IR signal): Just enter the app and aim any TV, wait a few seconds and... Bye :))
-- 
+
 # Future updates:
 - Honey: EvilAP for phising purposes.
 
